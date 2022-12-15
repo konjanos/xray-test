@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: hello_world/
+      Layers:
+        - !Ref MyPyLayer
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Role: !GetAtt LambdaRole.Arn
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        "Version": "2012-10-17"
+        "Statement": 
+            - "Effect": "Allow"
+              "Principal": 
+                "Service": "lambda.amazonaws.com"
+              "Action": "sts:AssumeRole"
+      ManagedPolicyArns: 
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies: 
+        - PolicyName: listS3
+          PolicyDocument:       
+            Version: "2012-10-17"
+            Statement:
+            - Effect: Allow
+              Action:
+                - "s3:ListAllMyBuckets"
+                - "s3:ListBucketVersions"
+                - "s3:ListBucket"
+              Resource: "*"
+
+  MyPyLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: requests_layer
+      CompatibleRuntimes:
+        - python3.7
+    Metadata:
+      BuildMethod: makefile
+
+  XrayLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: xray_layer
+      CompatibleRuntimes:
+        - python3.7
+    Metadata:
+      BuildMethod: makefile
+
+
+
+Outputs:
+  HelloWorldApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function, use with 'curl'"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  HelloWorldFunctionName:
+    Description: "add 'aws logs tail /aws/lambda/' before the function name to see its logs"
+    Value: !Ref HelloWorldFunction
