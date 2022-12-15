@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Globals:
+  Api:
+    TracingEnabled: true
+    
+
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function 
@@ -8,6 +13,7 @@ Resources:
       CodeUri: hello_world/
       Layers:
         - !Ref MyPyLayer
+        - !Ref XrayLayer
       Handler: app.lambda_handler
       Runtime: python3.7
       Role: !GetAtt LambdaRole.Arn
@@ -40,6 +46,29 @@ Resources:
                 - "s3:ListAllMyBuckets"
                 - "s3:ListBucketVersions"
                 - "s3:ListBucket"
+              Resource: "*"
+
+  LambdaTraceRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        "Version": "2012-10-17"
+        "Statement": 
+            - "Effect": "Allow"
+              "Principal": 
+                "Service": "lambda.amazonaws.com"
+              "Action": "sts:AssumeRole"
+      ManagedPolicyArns: 
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies: 
+        - PolicyName: listS3
+          PolicyDocument:       
+            Version: "2012-10-17"
+            Statement:
+            - Effect: Allow
+              Action:
+                - "xray:PutTraceSegment"
+                - "xray:PutTelemetryRecords"
               Resource: "*"
 
   MyPyLayer:

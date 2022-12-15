@@ -1,5 +1,9 @@
 import json,requests,boto3
 
+from aws_xray_sdk.core import xray_recorder,patch_all
+patch_all()
+
+
 def lambda_handler(event, context):
 	s3 = boto3.client('s3')
 
