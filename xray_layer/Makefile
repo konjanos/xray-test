@@ -1,2 +1,2 @@
 build-XrayLayer:
-	python -m pip install aws-xray-sdk -t "$(ARTIFACTS_DIR)"/python
+	python3 -m pip install aws-xray-sdk -t "$(ARTIFACTS_DIR)"/python
