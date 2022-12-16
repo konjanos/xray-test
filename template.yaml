@@ -35,40 +35,22 @@ Resources:
               "Action": "sts:AssumeRole"
       ManagedPolicyArns: 
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-      Policies: 
-        - PolicyName: listS3
-          PolicyDocument:       
-            Version: "2012-10-17"
-            Statement:
-            - Effect: Allow
-              Action:
-                - "s3:ListAllMyBuckets"
-                - "s3:ListBucketVersions"
-                - "s3:ListBucket"
-              Resource: "*"
 
-  LambdaTraceRole:
-    Type: AWS::IAM::Role
+  LambdaS3Policy:
+    Type: AWS::IAM::Policy
     Properties: 
-      AssumeRolePolicyDocument: 
-        "Version": "2012-10-17"
-        "Statement": 
-            - "Effect": "Allow"
-              "Principal": 
-                "Service": "lambda.amazonaws.com"
-              "Action": "sts:AssumeRole"
-      ManagedPolicyArns: 
-        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-      Policies: 
-        - PolicyName: listS3
-          PolicyDocument:       
-            Version: "2012-10-17"
-            Statement:
-            - Effect: Allow
-              Action:
-                - "xray:PutTraceSegment"
-                - "xray:PutTelemetryRecords"
-              Resource: "*"
+      PolicyName: LambdaS3Policy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+            - "s3:ListAllMyBuckets"
+            - "s3:ListBucketVersions"
+            - "s3:ListBucket"
+          Resource: "*"
+      Roles: 
+       - !Ref LambdaRole
 
   MyPyLayer:
     Type: AWS::Serverless::LayerVersion
