@@ -2,16 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Globals:
-<<<<<<< HEAD
   Api:
     TracingEnabled: true
   Function:
     Timeout: 15
-    
-=======
-  Function:
-    Timeout: 15
->>>>>>> 9689bf452fcc5e3fb394aa11e2b91b7ab8e1f045
 
 Resources:
   HelloWorldFunction:
