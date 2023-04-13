@@ -16,7 +16,7 @@ Resources:
         - !Ref MyPyLayer
         - !Ref XrayLayer
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.9
       Role: !GetAtt LambdaRole.Arn
       Events:
         HelloWorld:
@@ -64,7 +64,7 @@ Resources:
         Statement:
         - Effect: Allow
           Action:
-            - "xray:PutTraceSegment"
+            - "xray:PutTraceSegments"
             - "xray:PutTelemetryRecords"
           Resource: "*"
       Roles: 
@@ -76,7 +76,7 @@ Resources:
     Properties:
       ContentUri: requests_layer
       CompatibleRuntimes:
-        - python3.7
+        - python3.9
     Metadata:
       BuildMethod: makefile
 
@@ -85,7 +85,7 @@ Resources:
     Properties:
       ContentUri: xray_layer
       CompatibleRuntimes:
-        - python3.7
+        - python3.9
     Metadata:
       BuildMethod: makefile
 
