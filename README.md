@@ -3,11 +3,21 @@ Sample Lambda function prepared to be traced by x-ray
 
 Deploy it by starting a CloudShell console (which has all the tools installed and will use your credentials, so you're good to go):
 ```
-# git clone https://github.com/konjanos/xray-test.git
-# cd xray-test
-# sam build
-# sam validate
-# sam deploy --guided
+git clone https://github.com/konjanos/xray-test.git
+cd xray-test
+sam build
+sam validate
+sam deploy --guided
+```
+
+For `git build` to succeed, you should use the AL2023 AMI and install some pre-requisites as follows:
+```
+sudo yum install python git pip make
+
+## Set your region at least, otionally add credentials which have the privileges to deploy CFN stacks (if your instance profile doesn't have already)
+aws configure
+
+pip install aws-sam-cli
 ```
 
 You can mostly go with the defaults except for:
